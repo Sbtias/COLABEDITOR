@@ -1,0 +1,19 @@
+{
+  "geode": "v4.0.0",
+  "gd": {
+    "win": "2.2081",
+    "android": "2.2081"
+  },
+  "id": "sbtias.colabeditor",
+  "name": "COLABEDITOR",
+  "version": "v0.1.0",
+  "developer": "Sbtias",
+  "description": "Collaborative level-editor prototype for Geometry Dash. Adds an in-game COLABEDITOR panel.",
+  "tags": [
+    "editor",
+    "online",
+    "utility",
+    "interface"
+  ],
+  "dependencies": {}
+}
