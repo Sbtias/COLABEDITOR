@@ -1,34 +1,37 @@
 # COLABEDITOR
 
-Editor experimental de niveles inspirado en Geometry Dash 2.2081, con una interfaz oscura y herramientas para bloques, pinchos, monedas y portales.
+**COLABEDITOR is a Geode mod project for Geometry Dash 2.2081**, focused on bringing collaborative editing tools into the game's native level editor.
 
-## Inicio rápido
+> Current status: early C++/Geode scaffold. The in-editor button and popup are implemented as a first UI pass, but this repository has not yet been compiled against the target Geode SDK. Supabase authentication, realtime collaboration, and actual object-change synchronization are not implemented yet.
 
-Abre `index.html` en un navegador moderno o publícalo con GitHub Pages. No requiere un paso de compilación: la biblioteca de Supabase se importa desde CDN.
+## Native mod layout
 
-## Funciones actuales
+- `mod.json`: Geode mod metadata and target GD versions.
+- `CMakeLists.txt`: Geode CMake build target.
+- `src/main.cpp`: hooks `EditorUI` and adds a COLAB button that opens the in-game panel.
+- `index.html`: earlier standalone web-editor prototype; it is **not** the Geode mod.
 
-- Colocar y mover objetos en el escenario.
-- Inspector para ajustar posiciones y borrar objetos.
-- Cuadrícula, zoom, deshacer y selección de color de fondo.
-- Exportar el nivel como JSON.
-- Guardar proyectos en Supabase y escuchar actualizaciones del proyecto cuando Realtime esté disponible.
+## Build
 
-## Supabase
+1. Install Geode and its SDK/toolchain for your platform: https://docs.geode-sdk.org/
+2. Open this repository in a CMake-capable environment with the Geode SDK configured.
+3. Build the `COLABEDITOR` target using the Geode toolchain.
+4. Install the resulting mod package into a matching Geometry Dash + Geode installation.
+5. Test on GD 2.2081 and check the Geode log before distributing it.
 
-El prototipo está conectado al proyecto Supabase disponible en la cuenta al implementarlo. Ese proyecto aparece con el nombre **MetalGui** y contiene `public.game_projects`; no se encontró un proyecto llamado `colabeditor`. La interfaz usa esa tabla existente, con RLS que limita el acceso a los proyectos del usuario autenticado.
+The SDK version and hook signatures must match the installed Geode/GD build. This scaffold is not advertised as a tested or ready-to-install `.geode` package yet.
 
-Para guardar desde la interfaz:
-1. En Supabase, habilita **Anonymous Sign-Ins** en Authentication si quieres probar sin crear un formulario de registro.
-2. Confirma que `public.game_projects` tenga la tabla expuesta a la Data API y Realtime habilitado para cambios de Postgres.
-3. Publica el sitio por HTTPS y pulsa **Conectar nube** o **Guardar**.
+## Planned collaboration architecture
 
-El navegador solo utiliza la publishable key de Supabase. Nunca pongas una `service_role` o una secret key en el cliente.
+- Session create/join UI in the editor.
+- Supabase Auth for identity and project ownership.
+- Supabase tables and Realtime for session state and collaborative events.
+- Object-level change events, presence, and conflict handling rather than overwriting a whole level on every edit.
 
-## Alcance
+The available Supabase project in the connected account was named **MetalGui**, not `colabeditor`, and its existing `public.game_projects` table is currently used only by the older web prototype. The native C++ mod does not connect to Supabase yet. Before adding writes, the database schema and RLS policies need to be designed for shared sessions and collaborators; the existing per-owner policy is not sufficient for shared editing.
 
-Esto es un prototipo web de editor, no un mod binario inyectable en Geometry Dash ni una integración con el editor nativo del juego. La colaboración es básica a nivel de proyecto; para edición multiusuario robusta hacen falta cursores/presencia, conflictos de edición y un modelo de cambios más granular. Los datos exportados son JSON propio de COLABEDITOR, no un archivo de nivel nativo de Geometry Dash.
+Never embed a Supabase `service_role` or secret key in a client mod. Use only publishable credentials with appropriate RLS, or a trusted server endpoint for privileged operations.
 
-## Privacidad y atribución
+## Attribution
 
-COLABEDITOR es un proyecto independiente y no está afiliado a RobTop Games.
+COLABEDITOR is an independent community project and is not affiliated with RobTop Games or the official Geometry Dash team.
